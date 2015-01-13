@@ -1,0 +1,60 @@
+function [choice RT conf] = LBA_trial(A, b, v, sv, t0, N)
+% Run a single trial of the LBA model (Brown & Heathcote, 2008, Cog
+% Psychol)
+%
+% Usage: [choice RT conf] = LBA_trial(A, b, v, sv, t0)
+%
+% Inputs:
+%
+% A = range of uniform distribution U[0,A] from which starting point k is
+% drawn
+% b = bound (fixed across responses)
+% v = drift rate
+% sv = standard deviation of drift rate
+% t0 = non-decision time
+% N = number of response options
+%
+% inputs can either be 1 x N vectors, where N is number of
+% conditions/response options, or scalars, in which case parameters are
+% fixed across conditions
+%
+% Outputs:
+%
+% choice = scalar from 1:N indicating response chosen by model
+% RT = reaction time
+% confidence = confidence computed using balance of evidence rule (Vickers,
+% 1979)
+%
+% SF 2012
+
+for i = 1:N
+    
+    % Get starting point
+    k(i) = rand.*A;
+    
+    % Get drift rate
+    d(i) = lognrnd(v(i), sv);
+    
+    % Get time to threshold
+    t(i) = (b-k(i))./d(i);
+    
+    % Add on non-decision time
+    allRT(i) = t0 + t(i);
+end
+
+% Get choice and confidence
+[RT choice] = min(allRT);
+
+% Confidence is equal to threshold minus value of next best accumulator at decision
+% time
+j=1;
+if i == 1
+    conf = Na
+for i = 1:N
+    if i ~= choice
+        z(j) = t(choice).*d(i) + k(i);
+        j=j+1;
+    end
+end
+[nb i] = max(z);
+conf = b - nb;

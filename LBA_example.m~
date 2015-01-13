@@ -1,0 +1,76 @@
+% lba_wrapper
+%
+% script that nests lba model fitting and graphical output for individual subject data
+%
+% sf 2012
+
+%% simulate data
+ntrials = 500;
+% lba params
+t0 = 425;
+a = 380;
+b = 600;
+sv = 0.4;
+n = 2;
+for t = 1:ntrials
+    [data.response(t) data.rt(t) modconf(t)] = LBA_trial(a, b, v, t0, sv, n);
+end
+data.conf
+
+%% clean up data
+data = lba_clean(data);
+
+%% get fitted parameters
+% #### will change to have model/parray as cell arrays, for comparing
+% models
+model.v = 3;
+model.a = 1;
+model.b = 1;
+model.sv = 1;
+model.t0 = 1;
+parray = [0.8 0.8 0.8 300 150 0.4 200];
+
+[params ll] = LBA_mle(data, model, parray);
+
+ncond = max(data.cond);
+cor = data.response == data.stim;
+[v a b sv t0] = LBA_parse(model, params, ncond);
+
+nbin = 10;
+minrt = 100;
+maxrt = 1000;
+bins = linspace(minrt, maxrt, nbin);
+bindiff = bins(3)-bins(2);
+
+figure;
+set(gcf,'position',[150 500 450.*ncond 250]);
+for j = 1:ncond
+    subplot(1,ncond,j);
+    
+    % corrects
+    histdata = hist(data.rt(cor & data.cond == j), bins);
+    vi = [v(j) 1-v(j)];
+    histpred = lba_n1pdf(bins-t0(j),a(j),b(j)+a(j),vi,sv(j));
+    % histpred is likelihood of a single trial at this rt
+    % need to scale to area of bar (bindiff*trials)
+    histpred = histpred.*bindiff.*sum(data.cond == j);
+    h = bar(bins, histdata);
+    set(h, 'edgecolor','b','linewidth',2,'facecolor','w');
+    hold on
+    plot(bins, histpred, 'b','linewidth',2);
+    
+    % errors
+    histdata = hist(data.rt(~cor & data.cond == j), bins);
+    vi = [1-v(j) v(j)];
+    histpred = lba_n1pdf(bins-t0(j),a(j),b(j)+a(j),vi,sv(j));
+    % histpred is likelihood of a single trial at this rt
+    % need to scale to area of bar (bindiff*trials)
+    histpred = histpred.*bindiff.*sum(data.cond == j);
+    h = bar(bins+(bindiff/2), histdata);
+    set(h, 'edgecolor','r','linewidth',2,'facecolor','w');
+    hold on
+    plot(bins+(bindiff/2), histpred, 'r','linewidth',2);
+    xlabel('rt');
+    ylabel('freq');
+    
+end
