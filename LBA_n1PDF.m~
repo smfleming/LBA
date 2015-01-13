@@ -1,9 +1,0 @@
-function pdf = LBA_n1PDF(t, A, b, v, sv)
-% Generates defective PDF for responses on node #1
-%
-% SF 2012
-
-N = length(v);
-
-if N > 2
-    
