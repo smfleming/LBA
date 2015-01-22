@@ -55,7 +55,7 @@ for j = 1:Ncond
     % corrects
     histdata = hist(data.rt(cor & data.cond == j), bins);
     vi = [v(j) 1-v(j)];
-    histpred = lba_n1pdf(bins-t0(j),a(j),b(j)+a(j),vi,sv(j));
+    histpred = LBA_n1PDF(bins-t0(j),a(j),b(j)+a(j),vi,sv(j));
     % histpred is likelihood of a single trial at this rt
     % need to scale to area of bar (bindiff*trials)
     histpred = histpred.*bindiff.*sum(data.cond == j);
@@ -67,7 +67,7 @@ for j = 1:Ncond
     % errors
     histdata = hist(data.rt(~cor & data.cond == j), bins);
     vi = [1-v(j) v(j)];
-    histpred = lba_n1pdf(bins-t0(j),a(j),b(j)+a(j),vi,sv(j));
+    histpred = LBA_n1PDF(bins-t0(j),a(j),b(j)+a(j),vi,sv(j));
     % histpred is likelihood of a single trial at this rt
     % need to scale to area of bar (bindiff*trials)
     histpred = histpred.*bindiff.*sum(data.cond == j);

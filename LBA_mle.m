@@ -74,7 +74,7 @@ LL = -fVal;
             vi = repmat(v(data.cond),1,Nresp).*vi; % linear mapping into drift rate
             rtfit = data.rt - exp(t0(data.cond));
             % trial likelihoods
-            p = LBA_n1pdf(rtfit, exp(A(data.cond)), exp(b(data.cond)) + exp(A(data.cond)), vi, sv(data.cond));
+            p = LBA_n1PDF(rtfit, exp(A(data.cond)), exp(b(data.cond)) + exp(A(data.cond)), vi, sv(data.cond));
             
         elseif isfield(data, 'cond')
             
@@ -89,7 +89,7 @@ LL = -fVal;
             rtfit = data.rt - exp(t0(data.cond));
             
             % trial likelihoods
-            p = LBA_n1pdf(rtfit, exp(A(data.cond)), exp(b(data.cond)) + exp(A(data.cond)), vi, sv(data.cond));
+            p = LBA_n1PDF(rtfit, exp(A(data.cond)), exp(b(data.cond)) + exp(A(data.cond)), vi, sv(data.cond));
             
         else
             fprintf('\n\n\nBad input! See help LBA_mle.\n\n');
