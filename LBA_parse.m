@@ -21,7 +21,7 @@ end
 if model.A == 1
     A = repmat(pArray(j), Ncond, 1);
     j=j+1;
-elseif model.v == Ncond
+elseif model.A == Ncond
     for c = 1:model.A
         A(c,:) = pArray(j);
         j=j+1;
@@ -55,7 +55,7 @@ if length(pArray) >= j
     if model.t0 == 1
         t0 = repmat(pArray(j), Ncond, 1);
         j=j+1;
-    elseif model.sv == Ncond
+    elseif model.t0 == Ncond
         for c = 1:model.t0
             t0(c,:) = pArray(j);
             j=j+1;
